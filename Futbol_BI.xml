@@ -1,0 +1,80 @@
+<Schema name="New Schema1">
+  <Dimension type="StandardDimension" visible="true" name="Equipo">
+    <Hierarchy visible="true" hasAll="true">
+      <Table name="teams" schema="public" alias="">
+      </Table>
+      <Level name="Equipo" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Estadio">
+    <Hierarchy visible="true" hasAll="true">
+      <Table name="grounds" schema="public" alias="">
+      </Table>
+      <Level name="Estadio" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Ronda">
+    <Hierarchy visible="true" hasAll="true">
+      <Table name="rounds" schema="public" alias="">
+      </Table>
+      <Level name="Ronda" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Competici&#243;n">
+    <Hierarchy visible="true" hasAll="true">
+      <Table name="events" schema="public" alias="">
+      </Table>
+      <Level name="Competici&#243;n" visible="false" column="id" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Evento">
+    <Hierarchy visible="true" hasAll="true">
+      <Table name="leagues" schema="public" alias="">
+      </Table>
+      <Level name="Evento" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Temporada">
+    <Hierarchy visible="true" hasAll="true">
+      <Table name="seasons" schema="public" alias="">
+      </Table>
+      <Level name="Temporada" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Grupo">
+    <Hierarchy visible="true" hasAll="true">
+      <Table name="groups" schema="public" alias="">
+      </Table>
+      <Level name="Grupo" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Pa&#237;s">
+    <Hierarchy visible="true" hasAll="true">
+      <Table name="countries" schema="public" alias="">
+      </Table>
+      <Level name="Pa&#237;s" visible="true" column="id" nameColumn="name" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="Partidos" visible="true" cache="true" enabled="true">
+    <Table name="games" schema="public" alias="">
+    </Table>
+    <DimensionUsage source="Equipo" name="Equipo Local" visible="true" foreignKey="team1_id">
+    </DimensionUsage>
+    <DimensionUsage source="Equipo" name="Equipo Visitante" visible="true" foreignKey="team2_id">
+    </DimensionUsage>
+    <DimensionUsage source="Estadio" name="Estadio" visible="true" foreignKey="ground_id">
+    </DimensionUsage>
+    <DimensionUsage source="Ronda" name="Ronda" visible="true" foreignKey="round_id">
+    </DimensionUsage>
+    <DimensionUsage source="Grupo" name="Grupo" visible="true" foreignKey="group_id">
+    </DimensionUsage>
+  </Cube>
+</Schema>
