@@ -1,80 +1,105 @@
 <Schema name="New Schema1">
-  <Dimension type="StandardDimension" visible="true" name="Equipo">
-    <Hierarchy visible="true" hasAll="true">
-      <Table name="teams" schema="public" alias="">
-      </Table>
-      <Level name="Equipo" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
-      </Level>
-    </Hierarchy>
-  </Dimension>
-  <Dimension type="StandardDimension" visible="true" name="Estadio">
-    <Hierarchy visible="true" hasAll="true">
-      <Table name="grounds" schema="public" alias="">
-      </Table>
-      <Level name="Estadio" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
-      </Level>
-    </Hierarchy>
-  </Dimension>
-  <Dimension type="StandardDimension" visible="true" name="Ronda">
-    <Hierarchy visible="true" hasAll="true">
-      <Table name="rounds" schema="public" alias="">
-      </Table>
-      <Level name="Ronda" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
-      </Level>
-    </Hierarchy>
-  </Dimension>
-  <Dimension type="StandardDimension" visible="true" name="Competici&#243;n">
-    <Hierarchy visible="true" hasAll="true">
-      <Table name="events" schema="public" alias="">
-      </Table>
-      <Level name="Competici&#243;n" visible="false" column="id" uniqueMembers="true" levelType="Regular">
-      </Level>
-    </Hierarchy>
-  </Dimension>
-  <Dimension type="StandardDimension" visible="true" name="Evento">
-    <Hierarchy visible="true" hasAll="true">
-      <Table name="leagues" schema="public" alias="">
-      </Table>
-      <Level name="Evento" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
-      </Level>
-    </Hierarchy>
-  </Dimension>
-  <Dimension type="StandardDimension" visible="true" name="Temporada">
-    <Hierarchy visible="true" hasAll="true">
-      <Table name="seasons" schema="public" alias="">
-      </Table>
-      <Level name="Temporada" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
-      </Level>
-    </Hierarchy>
-  </Dimension>
-  <Dimension type="StandardDimension" visible="true" name="Grupo">
-    <Hierarchy visible="true" hasAll="true">
-      <Table name="groups" schema="public" alias="">
-      </Table>
-      <Level name="Grupo" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
-      </Level>
-    </Hierarchy>
-  </Dimension>
-  <Dimension type="StandardDimension" visible="true" name="Pa&#237;s">
-    <Hierarchy visible="true" hasAll="true">
-      <Table name="countries" schema="public" alias="">
-      </Table>
-      <Level name="Pa&#237;s" visible="true" column="id" nameColumn="name" type="String" uniqueMembers="true" levelType="Regular">
-      </Level>
-    </Hierarchy>
-  </Dimension>
-  <Cube name="Partidos" visible="true" cache="true" enabled="true">
-    <Table name="games" schema="public" alias="">
+  <Cube name="Goles" visible="true" cache="true" enabled="true">
+    <Table name="goals" schema="public">
     </Table>
-    <DimensionUsage source="Equipo" name="Equipo Local" visible="true" foreignKey="team1_id">
-    </DimensionUsage>
-    <DimensionUsage source="Equipo" name="Equipo Visitante" visible="true" foreignKey="team2_id">
-    </DimensionUsage>
-    <DimensionUsage source="Estadio" name="Estadio" visible="true" foreignKey="ground_id">
-    </DimensionUsage>
-    <DimensionUsage source="Ronda" name="Ronda" visible="true" foreignKey="round_id">
-    </DimensionUsage>
-    <DimensionUsage source="Grupo" name="Grupo" visible="true" foreignKey="group_id">
-    </DimensionUsage>
+    <Dimension type="StandardDimension" visible="true" foreignKey="person_id" highCardinality="false" name="Jugador">
+      <Hierarchy name="Jugador" visible="true" hasAll="true">
+        <Table name="persons" schema="public">
+        </Table>
+        <Level name="Jugador" visible="true" column="id" nameColumn="name" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="team_id" highCardinality="false" name="Equipo">
+      <Hierarchy name="Equipo" visible="true" hasAll="true">
+        <Table name="teams" schema="public">
+        </Table>
+        <Level name="Equipo" visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="game_id" highCardinality="false" name="Partido">
+      <Hierarchy name="Partido" visible="true" hasAll="true">
+        <Table name="Partido_Torneo" schema="public">
+        </Table>
+        <Level name="Torneo" visible="true" column="id" nameColumn="torneo" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Ronda " visible="true" column="id" nameColumn="ronda" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="N&#250;mero de Goles" column="id" aggregator="count" visible="true">
+    </Measure>
+    <Measure name="Autogoles" datatype="Integer" aggregator="sum" visible="true">
+      <MeasureExpression>
+        <SQL dialect="generic">
+          <![CDATA[CASE WHEN owngoal THEN 1 ELSE 0 END]]>
+        </SQL>
+      </MeasureExpression>
+    </Measure>
+    <Measure name="Penaltis" datatype="Integer" aggregator="sum" visible="true">
+      <MeasureExpression>
+        <SQL dialect="generic">
+          <![CDATA[CASE WHEN penalty THEN 1 ELSE 0 END]]>
+        </SQL>
+      </MeasureExpression>
+    </Measure>
+  </Cube>
+  <Cube name="Partidos" visible="true" cache="true" enabled="true">
+    <Table name="games" schema="public">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="round_id" highCardinality="false" name="Competici&#243;n">
+      <Hierarchy name="Competici&#243;n" visible="true" hasAll="true">
+        <Table name="Ronda_Torneo" schema="public" alias="">
+        </Table>
+        <Level name="Torneo" visible="true" column="id" nameColumn="torneo" type="String" uniqueMembers="true" levelType="Regular">
+        </Level>
+        <Level name="Ronda " visible="true" column="id" nameColumn="title" type="String" uniqueMembers="true" levelType="Regular">
+        </Level>
+        <Level name="Temporada" visible="true" column="id" nameColumn="temporada" uniqueMembers="true" levelType="Regular">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="team1_id" name="Equipo Local">
+      <Hierarchy name="Equipo Local" visible="true" hasAll="true">
+        <Table name="teams" schema="public" alias="">
+        </Table>
+        <Level name="Local" visible="true" column="id" nameColumn="title" internalType="String" uniqueMembers="true" levelType="Regular">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="team2_id" name="Equipo Visitante">
+      <Hierarchy name="Equipo Visitante" visible="true" hasAll="true">
+        <Table name="teams" schema="public" alias="">
+        </Table>
+        <Level name="Visitante" visible="true" column="id" nameColumn="title" internalType="String" uniqueMembers="true" levelType="Regular">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="Goles Local" column="score1" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Goles Visitante" column="score2" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Victorias Local" aggregator="sum" visible="true">
+      <MeasureExpression>
+        <SQL dialect="generic">
+          <![CDATA[CASE WHEN winner=1 THEN 1 ELSE 0 END]]>
+        </SQL>
+      </MeasureExpression>
+    </Measure>
+    <Measure name="Victorias Visitante" aggregator="sum" visible="true">
+      <MeasureExpression>
+        <SQL dialect="generic">
+          <![CDATA[CASE WHEN winner=2 THEN 1 ELSE 0 END]]>
+        </SQL>
+      </MeasureExpression>
+    </Measure>
+    <Measure name="Empates" aggregator="sum" visible="true">
+      <MeasureExpression>
+        <SQL dialect="generic">
+          <![CDATA[CASE WHEN winner=0 THEN 1 ELSE 0 END]]>
+        </SQL>
+      </MeasureExpression>
+    </Measure>
   </Cube>
 </Schema>
